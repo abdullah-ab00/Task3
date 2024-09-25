@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Weather Prediction</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+        .container {
+            background-color: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        input, select, button {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Weather Prediction</h2>
+        <form id="prediction-form">
+            <label for="outlook">Outlook:</label>
+            <select id="outlook" name="outlook" required>
+                <option value="Sunny">Sunny</option>
+                <option value="Overcast">Overcast</option>
+                <option value="Rain">Rain</option>
+            </select>
+
+            <label for="temp">Temperature:</label>
+            <select id="temp" name="temp" required>
+                <option value="Hot">Hot</option>
+                <option value="Mild">Mild</option>
+                <option value="Cool">Cool</option>
+            </select>
+
+            <label for="humidity">Humidity:</label>
+            <select id="humidity" name="humidity" required>
+                <option value="High">High</option>
+                <option value="Normal">Normal</option>
+            </select>
+
+            <label for="wind">Wind:</label>
+            <select id="wind" name="wind" required>
+                <option value="Weak">Weak</option>
+                <option value="Strong">Strong</option>
+            </select>
+
+            <button type="submit">Predict</button>
+        </form>
+
+        <div id="result"></div>
+    </div>
+
+    <script>
+        document.getElementById('prediction-form').addEventListener('submit', async function(event) {
+            event.preventDefault();
+
+            const formData = new FormData(event.target);
+
+            const response = await fetch('http://127.0.0.1:8000/predict/', {
+                method: 'POST',
+                body: formData
+            });
+
+            const result = await response.json();
+            document.getElementById('result').innerHTML = 
+                `Prediction: ${result.prediction}<br>
+                 Probability of Yes: ${result.prob_yes.toFixed(4)}<br>
+                 Probability of No: ${result.prob_no.toFixed(4)}`;
+        });
+    </script>
+</body>
+</html>
